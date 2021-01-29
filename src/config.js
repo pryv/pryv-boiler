@@ -340,7 +340,7 @@ function loadFromFile(fileUrl ) {
   const filePath = stripFileProtocol(fileUrl);
 
   if (isRelativePath(filePath)) {
-    const serviceCorePath = path.resolve(__dirname, '../../../../');
+    const serviceCorePath = path.resolve(__dirname, '../../../../../'); // assuming /node_modules/@pryv/boiler/src/
     fileUrl = path.resolve(serviceCorePath, filePath);
     fileUrl = 'file://' + fileUrl;
   } else {
