@@ -97,7 +97,7 @@ class Config {
     // memory must come first for config.set() to work without loading config files
     // 3. `process.env`
     // 4. `process.argv`
-    store.argv({parseValues: true}).env({parseValues: true});
+    store.argv({parseValues: true}).env({parseValues: true, separator: '__'});
     
     // 5. Values in `${NODE_ENV}-config.yml` or from --config parameter
     let configFile;
