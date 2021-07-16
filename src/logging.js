@@ -111,7 +111,7 @@ async function initLoggerWithConfig(config) { 
     if (config.get('logs:file:isRotated')) {
       const transport = new winston.transports.DailyRotateFile({
         filename: logFile.path + '.%DATE%',
-        datePattern: 'YYYY-MM-DD-HH',
+        datePattern: 'YYYY-MM-DD',
         zippedArchive: true,
         maxFiles: logFile.rotation.days ? logFile.rotation.days + 'd' : null,
       });
