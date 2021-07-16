@@ -1,5 +1,6 @@
 const util = require('util');
 const winston = require('winston');
+require('winston-daily-rotate-file');
 const debugModule = require('debug');
 let winstonInstance = null;
 let rootLogger = null;
@@ -107,15 +108,25 @@ async function initLoggerWithConfig(config) { 
   const logFile = config.get('logs:file');
   if (config.get('logs:file:active')) {
     rootLogger.debug('File active: ' + logFile.path);
-    const files = new winston.transports.File({ 
-      filename: logFile.path,
-      level: logFile.level,
-      maxsize: logFile.maxFileBytes,
-      maxFiles: logFile.maxNbFiles,
-      timestamp: true,
-      json: false
-    });
-    winstonInstance.add(files);
+    if (config.get('logs:file:isRotated')) {
+      const transport = new winston.transports.DailyRotateFile({
+        filename: logFile.path + '.%DATE%',
+        datePattern: 'YYYY-MM-DD-HH',
+        zippedArchive: true,
+        maxFiles: logFile.rotation.days ? logFile.rotation.days + 'd' : null,
+      });
+    } else {
+      const files = new winston.transports.File({ 
+        filename: logFile.path,
+        level: logFile.level,
+        maxsize: logFile.maxFileBytes,
+        maxFiles: logFile.maxNbFiles,
+        timestamp: true,
+        json: false
+      });
+      winstonInstance.add(files);
+    }
+    
   }
   rootLogger.debug('Logger Initialized');
 };
