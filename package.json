@@ -1,6 +1,6 @@
 {
   "name": "@pryv/boiler",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Config and Logging boilerplate for Pryv's Node.js apps and services",
   "main": "src/index",
   "scripts": {
