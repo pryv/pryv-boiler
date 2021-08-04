@@ -108,7 +108,7 @@ async function initLoggerWithConfig(config) { 
   const logFile = config.get('logs:file');
   if (config.get('logs:file:active')) {
     rootLogger.debug('File active: ' + logFile.path);
-    if (config.get('logs:file:isRotated')) {
+    if (logFile.rotation.isActive) {
       const transport = new winston.transports.DailyRotateFile({
         filename: logFile.path + '.%DATE%',
         datePattern: 'YYYY-MM-DD',
