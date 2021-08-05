@@ -38,7 +38,10 @@ const defaults = {
     },
     file: {
       active: true,
-      path: 'application.log'
+      path: 'application.log',
+      rotation: {
+        isActive: false
+      }
     },
     airbrake: {
       active: false
