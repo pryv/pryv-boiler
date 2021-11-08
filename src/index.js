@@ -5,11 +5,11 @@
   */
 
 
-const Gifnoc  = require('./config');
+const Config  = require('./config');
 const logging = require('./logging');
 const airbrake = require('./airbrake');
 
-const config = new Gifnoc();
+const config = new Config();
 
 const boiler = {
   /**
@@ -45,6 +45,8 @@ const boiler = {
    * @param {Function} [fullyLoadedCallback] - (optional) called when the config is fully loaded
    */
   init: init, 
+  ainit: ainit,
+  config: null,
 }
 
 let logger;
@@ -75,17 +77,26 @@ function init(options, fullyLoadedCallback) {
 
   config.initASync().then((config) => {
     configIsInitalized = true;
+    boiler.config = config;
     // airbrake config might come from async settings, so we try twice.
     airbrake.setUpAirbrakeIfNeeded(config, logger);
     if (fullyLoadedCallback) fullyLoadedCallback(config);
   });
 
-  
-
-  
   return boiler
 }
 
+function ainit(options) {
+  return new Promise((resolve, reject) => {
+    try {
+      init(options, (config) => { 
+        resolve(boiler);
+      });
+    } catch (e) {
+      reject(e);
+    }
+  });
+}
 
 async function getConfig() {
   if (! configInitCalledWithName) {
