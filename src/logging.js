@@ -255,7 +255,7 @@ function _inspectAndHide(o) {
 
     const res = {};
     for (let key of Object.keys(o)) {
-      if (['password', 'passwordHash'].includes(key)) {
+      if (['password', 'passwordHash', 'newPassword'].includes(key)) {
         res[key] = '(hidden password)';
       } else {
         res[key] = inspectAndHide(o[key]);
