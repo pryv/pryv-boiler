@@ -271,7 +271,7 @@ function _inspectAndHide(o) {
 function hideSensitiveValues (msg) {
   if (typeof msg !== 'string') return msg;
   const tokenRegexp = /auth\=c([a-z0-9-]*)/g;
-  const passwordRegexp = /"(password|passwordHash)"[:=]"([^"]*)"/g;
+  const passwordRegexp = /"(password|passwordHash|newPassword)"[:=]"([^"]*)"/g;
   const mask = '(hidden)';
 
   const res = msg
