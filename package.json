@@ -1,14 +1,14 @@
 {
   "name": "@pryv/boiler",
   "version": "1.0.5",
-  "description": "Config and Logging boilerplate for Pryv's Node.js apps and services",
+  "description": "Logging and config boilerplate library for Node.js apps and services at Pryv",
   "main": "src/index",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/pryv/lib-node-boiler.git"
+    "url": "git+https://github.com/pryv/pryv-boiler.git"
   },
   "keywords": [
     "Pryv",
@@ -18,9 +18,9 @@
   "author": "Pryv S.A.",
   "license": "BSD-3-Clause",
   "bugs": {
-    "url": "https://github.com/pryv/lib-node-boiler/issues"
+    "url": "https://github.com/pryv/pryv-boiler/issues"
   },
-  "homepage": "https://github.com/pryv/lib-node-boiler#readme",
+  "homepage": "https://github.com/pryv/pryv-boiler#readme",
   "dependencies": {
     "@airbrake/node": "^1.4.2",
     "debug": "^4.3.1",

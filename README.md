@@ -1,11 +1,10 @@
-# Pryv Config and Logging boilerplate for Node.js application
+# Pryv config and logging boilerplate for Node.js
 
 ## Usage
 
 #### Initialization
 
-The "boiler" must me initialized before invoking `getConfig
-` or `getLogger`. This will set the application name and configuration files information.
+The "boiler" must me initialized before invoking `getConfig` or `getLogger`. This will set the application name and configuration files information.
 
 ```javascript
 require('@pryv/boiler').init({
@@ -34,10 +33,10 @@ Each configuration has a is loaded under a "scope" name. This scope name can be 
 
 - **1- 'test'** -> empty slot reserved for tests to override any other config parameter
 - **2- 'argv'** -> Loaded from arguments
-- **3- 'env'** -> Loaded from environment variables 
+- **3- 'env'** -> Loaded from environment variables
 - **4- 'base'** -> Loaded from `${NODE_ENV}-config.yml` (if present) or --config parameters
-- **5 and next** -> Loaded from extras 
-- **end** 
+- **5 and next** -> Loaded from extras
+- **end**
   - **'default-file'** -> Loaded from `${baseConfigDir}/default-config.yml`
   - **'defaults'** -> Hard-coded defaults for logger
 
@@ -45,7 +44,7 @@ Each configuration has a is loaded under a "scope" name. This scope name can be 
 
 At initialization a list of extra configuration can be set or reserved. The `extraConfigs`parameter array can take any  of the following items:
 
-- File: `{scope: <name>, file: <path to file> }` accepts `.yml`, `.json` and `.js` files. Note `.js` content is loaded with `require(<path to file>)` 
+- File: `{scope: <name>, file: <path to file> }` accepts `.yml`, `.json` and `.js` files. Note `.js` content is loaded with `require(<path to file>)`
 - Data: `{scope: <name>, key: <optional key>, data: <object> }` if a `key` is provided the content of `data` will be accessible by this key otherwise the content of data is loaded at the root of the configuration.
 - RemoteUrl: `{scope: <name>, key: <optional key>, url: <URL to json content> }`  The remote content of this URL will be loaded asynchronously.
 - URLFromKey: `{scope: <name>, key: <optional key>, urlFromKey: <key> }` The url is obtained from a configuration item already available.
@@ -55,7 +54,7 @@ At initialization a list of extra configuration can be set or reserved. The `ext
 The configuration can be obtained in two ways:
 
 ```javascript
-// synchronous loading of the configuration 
+// synchronous loading of the configuration
 const { getConfigUnsafe } = require('@pryv/boiler'); // Util the asynchronous contents such as URL are loaded, items might not be available.
 const config = await getConfigUnsafe();
 
@@ -98,15 +97,15 @@ config.get('foo'); // {bar: 'hello'}
 ```
 
 #### Config "Learn" Mode
-In order to track unused parameters in config, a "learn" mode can be activated. All config.get() will be tracked in files. 
+In order to track unused parameters in config, a "learn" mode can be activated. All config.get() will be tracked in files.
 
 Example when running tests
 ```
-export CONFIG_LEARN_DIR="{Full Path}/service-core/learn-config" 
+export CONFIG_LEARN_DIR="{Full Path}/service-core/learn-config"
 yarn test
 ```
 
-### logging 
+### logging
 
 All messages are prefixed by `appName` initialization value. appName can be postfixed with a string by setting the environment variable `PRYV_BOILER_SUFFIX` this is useful when spawning several concurrent processed of the same applications.
 
@@ -131,7 +130,7 @@ example `DEBUG="*" node app.js` to get all debug lines
 
 As debug is a widely used package, you might have way more debug lines than you expect.
 
-The `appName` property can be used to filter only debug lines from your application. 
+The `appName` property can be used to filter only debug lines from your application.
 
 #### Log configuration sample
 
@@ -152,6 +151,3 @@ logs: {
     }
   }
 ```
-
-
-
