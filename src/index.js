@@ -1,3 +1,9 @@
+/**
+ * @license
+ * Copyright (C) 2020-2022 Pryv S.A. https://pryv.com 
+ * This file is part of Open-Pryv.io and released under BSD-Clause-3 License
+ * SPDX-License-Identifier: BSD-3-Clause
+ */
 
  /**
   * Pryv Boiler module.
@@ -5,11 +11,11 @@
   */
 
 
-const Gifnoc  = require('./config');
+const Config  = require('./config');
 const logging = require('./logging');
 const airbrake = require('./airbrake');
 
-const config = new Gifnoc();
+const config = new Config();
 
 const boiler = {
   /**
@@ -35,7 +41,8 @@ const boiler = {
    * @param {boolean} warnOnly - Only warns about potential misuse of config 
    * @returns {Config}
    */
-  getConfigUnsafe: getConfigUnsafe ,
+  getConfigUnsafe: getConfigUnsafe,
+
   /**
    * Init Boiler, should be called just once when starting an APP
    * @param {Object} options
@@ -79,9 +86,6 @@ function init(options, fullyLoadedCallback) {
     airbrake.setUpAirbrakeIfNeeded(config, logger);
     if (fullyLoadedCallback) fullyLoadedCallback(config);
   });
-
-  
-
   
   return boiler
 }
