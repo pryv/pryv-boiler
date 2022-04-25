@@ -5,16 +5,16 @@
 
 /**
  * Load configuration in the following order (1st prevails)
- * 
+ *
  * .0 'memory' -> empty, use when doing 'config.set()'
  * .1 'override-file' -> Loaded at from override-config.yml (if present)
  * .2 'test' -> empty, used by test to override any other config parameter
  * .3 'argv' -> Loaded from arguments
  * .4 'env' -> Loaded from environement variables
  * .5 'base' -> Loaded from ${process.env.NODE_ENV}-config.yml (if present) or --config parameter
- * .6 and next -> Loaded from extras 
- * .end 
- *  . 'default-file' -> Loaded from ${baseDir}/default-config.yml 
+ * .6 and next -> Loaded from extras
+ * .end
+ *  . 'default-file' -> Loaded from ${baseDir}/default-config.yml
  *  . 'defaults' -> Hard coded defaults for logger
  */
 
@@ -105,25 +105,25 @@ class Config {
     // 3. `process.env`
     // 4. `process.argv`
     store.argv({parseValues: true}).env({parseValues: true, separator: '__'});
-    
+
     // 5. Values in `${NODE_ENV}-config.yml` or from --config parameter
     let configFile;
     if (store.get('config')) {
       configFile = store.get('config')
     } else if (store.get('NODE_ENV')) {
       configFile = path.resolve(baseConfigDir, store.get('NODE_ENV') + '-config.yml');
-    } 
+    }
     if (configFile) {
       loadFile('base', configFile);
     } else {
-      // book 'base' slot 
+      // book 'base' slot
       store.use('base', { type: 'literal', store: {} });
       logger.debug('Booked [base] empty as no --config or NODE_ENV was set');
     }
 
     // load extra config files & plugins
     if (options.extras) {
-      for (let extra of options.extras) { 
+      for (let extra of options.extras) {
         if (extra.file) {
           loadFile(extra.scope, extra.file);
           continue;
@@ -158,11 +158,11 @@ class Config {
 
     // .end-1 load default and custom config from configs/default-config.json
     loadFile('default-file', path.resolve(baseConfigDir, 'default-config.yml'));
-    
+
     // .end load hard coded defaults
     store.defaults(defaults);
-    
-    // init Logger 
+
+    // init Logger
     logging.initLoggerWithConfig(this);
     return this;
 
@@ -171,7 +171,7 @@ class Config {
     function loadFile(scope, filePath) {
 
       if (fs.existsSync(filePath)) {
-       
+
         if (filePath.endsWith('.js')) {  // JS file
           const conf = require(filePath);
           store.use(scope, { type: 'literal', store: conf });
@@ -211,11 +211,11 @@ class Config {
     }
 
     // load remote config files
-    for (let extra of this.extraAsync) { 
+    for (let extra of this.extraAsync) {
       if (extra.url) {
         await loadUrl(extra.scope, extra.key, extra.url);
         continue;
-      } 
+      }
       if (extra.urlFromKey) {
         const url = store.get(extra.urlFromKey);
         await loadUrl(extra.scope, extra.key, url);
@@ -239,10 +239,10 @@ class Config {
           logger.warn('Cannot only load .js file: ' + filePath + ' for scope [' + extra.scope + ']');
           continue;
         }
-        
+
         const conf = await require(filePath)();
         store.add(extra.scope, { type: 'literal', store: conf });
-        
+
         logger.debug('Loaded in scope [' + extra.scope + ']async .js file: ' + filePath);
       }
     }
@@ -254,7 +254,7 @@ class Config {
 
   /**
    * Return true if key as value
-   * @param {string} key 
+   * @param {string} key
    * @returns {boolean}
    */
   has(key) {
@@ -265,7 +265,7 @@ class Config {
 
   /**
    * Retreive value
-   * @param {string} key 
+   * @param {string} key
    */
   get(key) {
     if (! this.store) { throw(new Error('Config not yet initialized'))}
@@ -277,7 +277,7 @@ class Config {
 
   /**
    * Retreive value and store info that applies
-   * @param {string} key  
+   * @param {string} key
    */
   getScopeAndValue(key) {
     if (! this.store) { throw(new Error('Config not yet initialized'))};
@@ -302,7 +302,7 @@ class Config {
 
   /**
    * Set value
-   * @param {string} key 
+   * @param {string} key
    * @param {Object} value
    */
   set(key, value) {
@@ -388,7 +388,7 @@ function getLearnFilename(appName, learnDirectory) {
 
 function learn(learnDirectoryAndFilename, key) {
   if (learnDirectoryAndFilename) {
-    const caller_line = (new Error()).stack.split('\n')[3]; // get callee name and line 
+    const caller_line = (new Error()).stack.split('\n')[3]; // get callee name and line
     const index = caller_line.indexOf("at ");
     str = key + ';' + caller_line.slice(index+3, caller_line.length) + '\n';
     fs.appendFileSync(learnDirectoryAndFilename + '-calls.csv', str);
@@ -416,26 +416,26 @@ function saveConfig(learnDirectoryAndFilename, store) {
 
  /**
  * @typedef ConfigPlugin
- * @property {Object} plugin 
+ * @property {Object} plugin
  * @property {Function} plugin.load - a function that takes the "nconf store" as argument and returns the "name" of the plugin
  */
 
  /**
  * @typedef ConfigData
  * @property {string} scope - scope for nconf hierachical load
- * @property {string} [key] - (optional) key to load result of url. If null loaded at root of the config 
+ * @property {string} [key] - (optional) key to load result of url. If null loaded at root of the config
  * @property {object} data - the data to load
 
 
 /**
  * @typedef ConfigRemoteURL
  * @property {string} scope - scope for nconf hierachical load
- * @property {string} [key] - (optional) key to load result of url. If null loaded at root of the config 
- * @property {string} url - the url to the config definition 
+ * @property {string} [key] - (optional) key to load result of url. If null loaded at root of the config
+ * @property {string} url - the url to the config definition
  */
 /**
  * @typedef ConfigRemoteURLFromKey
  * @property {string} scope - scope for nconf hierachical load
- * @property {string} [key] - (optional) key to load result of url. If null override 
+ * @property {string} [key] - (optional) key to load result of url. If null override
  * @property {string} urlFromKey - retrieve url from config matching this key
  */

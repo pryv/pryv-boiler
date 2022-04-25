@@ -3,13 +3,12 @@
  * [BSD-3-Clause](https://github.com/pryv/pryv-boiler/blob/master/LICENSE)
  */
 
- /**
+/**
   * Pryv Boiler module.
   * @module boiler
   */
 
-
-const Config  = require('./config');
+const Config = require('./config');
 const logging = require('./logging');
 const airbrake = require('./airbrake');
 
@@ -17,7 +16,7 @@ const config = new Config();
 
 const boiler = {
   /**
-   * notify Airbrake. 
+   * notify Airbrake.
    * If initalize, arguments will be passed to airbrake.notify()
    */
   notifyAirbrake: airbrake.notifyAirbrake,
@@ -27,16 +26,16 @@ const boiler = {
    * @param {string} name
    * @returns {Logger}
    */
-  getLogger: logging.getLogger, 
+  getLogger: logging.getLogger,
   /**
    * Prefered way to get the configuration
    * @returns {Promise}
    */
   getConfig: getConfig,
   /**
-   * get the configuration. 
-   * If the configuration is not fully initialized throw an error 
-   * @param {boolean} warnOnly - Only warns about potential misuse of config 
+   * get the configuration.
+   * If the configuration is not fully initialized throw an error
+   * @param {boolean} warnOnly - Only warns about potential misuse of config
    * @returns {Config}
    */
   getConfigUnsafe: getConfigUnsafe,
@@ -49,18 +48,18 @@ const boiler = {
    * @param {Array<ConfigFile|ConfigRemoteURL|ConfigRemoteURLFromKey|ConfigPlugin>} [options.extraConfigs] - (optional) and array of extra files to load
    * @param {Function} [fullyLoadedCallback] - (optional) called when the config is fully loaded
    */
-  init: init, 
-}
+  init: init
+};
 
 let logger;
-let configIsInitalized = false;
+let configInitialized = false;
 let configInitCalledWithName = null;
 
-function init(options, fullyLoadedCallback) {
+function init (options, fullyLoadedCallback) {
   if (configInitCalledWithName) {
-    logger.warn('Skipping initalization! boiler is already initialized with appName: ' + configInitCalledWithName)
+    logger.warn('Skipping initalization! boiler is already initialized with appName: ' + configInitCalledWithName);
     return boiler;
-  };
+  }
 
   // append the value of process.env.PRYV_BOILER_SUFFIX if present
   options.appNameWithoutPostfix = options.appName;
@@ -79,42 +78,38 @@ function init(options, fullyLoadedCallback) {
   airbrake.setUpAirbrakeIfNeeded(config, logger);
 
   config.initASync().then((config) => {
-    configIsInitalized = true;
+    configInitialized = true;
     // airbrake config might come from async settings, so we try twice.
     airbrake.setUpAirbrakeIfNeeded(config, logger);
     if (fullyLoadedCallback) fullyLoadedCallback(config);
   });
-  
-  return boiler
+
+  return boiler;
 }
 
-
-async function getConfig() {
-  if (! configInitCalledWithName) {
-    throw(new Error('boiler must be initialized with init() before using getConfig()'));
-  };
-  while(! configIsInitalized) {
-    await new Promise(r => setTimeout(r, 100)); // wait 100ms
+async function getConfig () {
+  if (!configInitCalledWithName) {
+    throw (new Error('boiler must be initialized with init() before using getConfig()'));
+  }
+  /* eslint-disable-next-line no-unmodified-loop-condition */
+  while (!configInitialized) {
+    await new Promise(resolve => setTimeout(resolve, 100)); // wait 100ms
   }
   return config;
 }
 
-
-function getConfigUnsafe(warnOnly) {
-  if (! configInitCalledWithName) {
-    throw(new Error('boiler must be initialized with init() before using getConfigUnsafe()'));
-  };
-  if (! configIsInitalized) {
+function getConfigUnsafe (warnOnly) {
+  if (!configInitCalledWithName) {
+    throw (new Error('boiler must be initialized with init() before using getConfigUnsafe()'));
+  }
+  if (!configInitialized) {
     if (warnOnly) {
       logger.warn('Warning! config loaded before being fully initialized');
     } else {
-      throw(new Error('Config loaded before being fully initialized'));
+      throw (new Error('Config loaded before being fully initialized'));
     }
-  };
+  }
   return config;
 }
-
-
-
 
 module.exports = boiler;

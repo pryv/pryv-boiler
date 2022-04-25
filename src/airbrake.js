@@ -3,14 +3,13 @@
  * [BSD-3-Clause](https://github.com/pryv/pryv-boiler/blob/master/LICENSE)
  */
 
-
 const { Notifier } = require('@airbrake/node');
 
 let airbrake;
 let logger;
 
-function setUpAirbrakeIfNeeded(config, rootLogger) {
-  if (airbrake) {   
+function setUpAirbrakeIfNeeded (config, rootLogger) {
+  if (airbrake) {
     rootLogger.debug('Skipping airBrake setup (already done)');
     return;
   }
@@ -21,11 +20,10 @@ function setUpAirbrakeIfNeeded(config, rootLogger) {
     airbrake = new Notifier({
       projectId: airBrakeSettings.projectId,
       projectKey: airBrakeSettings.key,
-      environment: 'production',
+      environment: 'production'
     });
     logger.debug('Airbrake active with projectId: ', airBrakeSettings);
   }
-  
 
   // Catch uncaught Promise rejections
   process.on('unhandledRejection', (reason) => {
@@ -38,10 +36,9 @@ function setUpAirbrakeIfNeeded(config, rootLogger) {
     await notifyAirbrake(error);
     if (process.env.NODE_ENV !== 'test') process.exit(1);
   });
-
 }
 
-async function notifyAirbrake() {
+async function notifyAirbrake () {
   if (airbrake != null && typeof airbrake.notify === 'function') {
     await airbrake.notify(...arguments);
   } else {
@@ -52,4 +49,4 @@ async function notifyAirbrake() {
 module.exports = {
   setUpAirbrakeIfNeeded: setUpAirbrakeIfNeeded,
   notifyAirbrake: notifyAirbrake
-}
+};
