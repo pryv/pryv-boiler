@@ -1,6 +1,6 @@
 {
   "name": "@pryv/boiler",
-  "version": "1.0.8",
+  "version": "1.0.9",
   "private": false,
   "description": "Logging and config boilerplate library for Node.js apps and services at Pryv",
   "keywords": [
@@ -30,7 +30,7 @@
     "nconf": "^0.12.0",
     "semistandard": "^16.0.1",
     "source-licenser": "^2.0.4",
-    "superagent": "^7.1.2",
+    "superagent": "^7.1.5",
     "winston": "^3.7.2",
     "winston-daily-rotate-file": "^4.6.1"
   }

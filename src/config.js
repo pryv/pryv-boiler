@@ -269,9 +269,9 @@ class Config {
    */
   get(key) {
     if (! this.store) { throw(new Error('Config not yet initialized'))}
-    learn(this.learnDirectoryAndFilename, key);
     const value = this.store.get(key);
     if (typeof value === 'undefined') this.logger.debug('get: [' + key +'] is undefined');
+    learn(this.learnDirectoryAndFilename, key);
     return value;
   }
 
@@ -338,8 +338,8 @@ module.exports = Config;
 const FILE_PROTOCOL = 'file://';
 const FILE_PROTOCOL_LENGTH = FILE_PROTOCOL.length;
 
-async function loadFromUrl(serviceInfoUrl ) {
-  const res = await superagent.get(serviceInfoUrl);
+async function loadFromUrl(url) {
+  const res = await superagent.get(url);
   return res.body;
 }
 
@@ -390,19 +390,14 @@ function learn(learnDirectoryAndFilename, key) {
   if (learnDirectoryAndFilename) {
     const caller_line = (new Error()).stack.split('\n')[3]; // get callee name and line
     const index = caller_line.indexOf("at ");
-    str = key + ';' + caller_line.slice(index+3, caller_line.length) + '\n';
+    const str = key + ';' + caller_line.slice(index+3, caller_line.length) + '\n';
     fs.appendFileSync(learnDirectoryAndFilename + '-calls.csv', str);
   }
 }
 
 function saveConfig(learnDirectoryAndFilename, store) {
   if (learnDirectoryAndFilename) {
-    let i = 0;
-    let filename;
-    do {
-      filename =learnDirectoryAndFilename + '-config.json';
-      i++;
-    } while(fs.existsSync(filename));
+    const filename = learnDirectoryAndFilename + '-config.json';
     fs.writeFileSync(filename, JSON.stringify({stores: store.stores, config: store.get()}, null, 2));
   }
 }

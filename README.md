@@ -99,6 +99,14 @@ config.get('foo'); // {bar: 'hello'}
 // Note: for 'test' scope there is a "sugar" function with config.injectTestConfig(object)
 ```
 
+Finding out from which scope a key applies:
+As nconf is hierachical sometimes you migth want to search from which scope the value of a key is issued.
+
+```javascript
+config.getScopeAndValue('foo'); 
+// returns {value: 'bar', scope: 'scopeName'; info: 'From <file> or Type <env, '}
+```
+
 #### "Learn" mode
 
 To help detect unused configuration settings, a "learn" mode can be activated to track all calls to `config.get()` in files.
@@ -154,6 +162,11 @@ logs: {
     }
   }
 ```
+
+## TODO
+
+- Make config an eventEmiiter ? // to track when read or if config chenages
+- FIX realtive PATH logic for config.loadFromFile() 
 
 
 ## Contributing
