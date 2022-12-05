@@ -7,7 +7,7 @@
  */
 
 const path = require('path');
-const learnDir = process.env.CONFIG_LEARN_DIR || path.resolve(__dirname, '../../../learn-config');
+const learnDir = process.env.CONFIG_LEARN_DIR || path.resolve(process.cwd(), 'learn-config');
 console.log('Looking for learning files in: ' + learnDir);
 const fs = require('fs');
 

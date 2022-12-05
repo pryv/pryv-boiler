@@ -11,6 +11,7 @@ The "boiler" must be initialized with the application name and configuration fil
 ```js
 require('@pryv/boiler').init({
   appName: 'my-app', // This will will be prefixed to any log messages
+  baseFilesDir: path.resolve(__dirname, '..'), // use for file:// relative path if not give cwd() will be used
   baseConfigDir: path.resolve(__dirname, '../config'),
   extraConfigs: [{
     scope: 'extra-config',
@@ -116,7 +117,7 @@ Example when running tests:
 export CONFIG_LEARN_DIR="{absolute path}/service-core/learn-config"
 yarn test
 ```
-
+Note, if CONFIG_LEARN_DIR is not given `{process.cwd()}/learn-config` will be used 
 
 ### Logging
 

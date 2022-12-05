@@ -76,6 +76,7 @@ class Config {
    * @param {string} appName
    * @param {string} [learnDirectory] - (optional) if set, all .get() calls will be tracked in this files in this directory
    * @param {string} [options.baseConfigDir] - (optional) directory to use to look for configs (default, env)
+   * @param {string} [options.baseFilesDir] - (optional) directory to use for `file://` relative path
    * @param {Array<ConfigFile|ConfigPlugin|ConfigData|ConfigRemoteURL|ConfigRemoteURLFromKey>} [options.extras] - (optional) and array of extra files or plugins to load (synchronously or async)
    * @param {Object} logging
    * @returns {Config} this
@@ -83,6 +84,7 @@ class Config {
   initSync(options, logging) {
     this.appName = options.appName;
     this.learnDirectoryAndFilename = getLearnFilename(options.appName, options.learnDirectory);
+    this.baseFilesDir = options.baseFilesDir || process.cwd();
 
     const logger = this.logger = logging.getLogger('config');
     const store = this.store = new nconf.Provider();
@@ -201,7 +203,7 @@ class Config {
 
       let res = null;
       if (isFileUrl(url)) {
-        res = loadFromFile(url);
+        res = loadFromFile(url, this.baseFilesDir);
       } else {
         res = await loadFromUrl(url);
       }
@@ -265,7 +267,7 @@ class Config {
 
   /**
    * Retreive value
-   * @param {string} key
+   * @param {string} [key] if no key is provided all the config is returned
    */
   get(key) {
     if (! this.store) { throw(new Error('Config not yet initialized'))}
@@ -343,12 +345,11 @@ async function loadFromUrl(url) {
   return res.body;
 }
 
-function loadFromFile(fileUrl ) {
+function loadFromFile(fileUrl, baseFilesDir) {
   const filePath = stripFileProtocol(fileUrl);
 
   if (isRelativePath(filePath)) {
-    const serviceCorePath = path.resolve(__dirname, '../../../../'); // assuming /node_modules/@pryv/boiler/src/
-    fileUrl = path.resolve(serviceCorePath, filePath);
+    fileUrl = path.resolve(baseFilesDir, filePath);
     fileUrl = 'file://' + fileUrl;
   } else {
     // absolute path, do nothing.

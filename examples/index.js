@@ -6,6 +6,7 @@ const path = require('path');
 const boiler = require('../src');
 const { getConfigUnsafe, getLogger, getConfig } = require('../src').init({
   appName: 'sample',
+  baseFilesDir: path.resolve(__dirname, '../'),
   baseConfigDir: path.resolve(__dirname, './configs'),
   extraConfigs: [{
     scope: 'airbrake',

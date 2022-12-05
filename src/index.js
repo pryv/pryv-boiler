@@ -12,8 +12,6 @@ const Config = require('./config');
 const logging = require('./logging');
 const airbrake = require('./airbrake');
 
-/** @typedef {Config} Config */
-
 /** @type {Config} */
 const config = new Config();
 
@@ -72,6 +70,7 @@ function init (options, fullyLoadedCallback) {
   configInitCalledWithName = options.appName;
   config.initSync({
     baseConfigDir: options.baseConfigDir,
+    baseFilesDir: options.baseFilesDir,
     extras: options.extraConfigs,
     appName: options.appNameWithoutPostfix,
     learnDirectory: process.env.CONFIG_LEARN_DIR
