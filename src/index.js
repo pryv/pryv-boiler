@@ -4,14 +4,17 @@
  */
 
 /**
-  * Pryv Boiler module.
-  * @module boiler
-  */
+ * Pryv Boiler module.
+ * @module boiler
+ */
 
 const Config = require('./config');
 const logging = require('./logging');
 const airbrake = require('./airbrake');
 
+/** @typedef {Config} Config */
+
+/** @type {Config} */
 const config = new Config();
 
 const boiler = {
@@ -29,7 +32,7 @@ const boiler = {
   getLogger: logging.getLogger,
   /**
    * Prefered way to get the configuration
-   * @returns {Promise}
+   * @returns {Promise<Config>}
    */
   getConfig: getConfig,
   /**

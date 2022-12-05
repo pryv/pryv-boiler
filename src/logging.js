@@ -212,6 +212,7 @@ class Logger {
   /**
    * get a "sub" Logger
    * @param {Logger} name 
+   * @returns {Logger}
    */
   getLogger (name) {
     return new Logger(name, this);
@@ -220,6 +221,11 @@ class Logger {
   inspect() { inspect(...arguments); }
 }
 
+/**
+ * Get a new logger, or root loggger if no name is provided
+ * @param {string} [name]  
+ * @returns {Logger}
+ */
 function getLogger(name) {
   if (! rootLogger) {
     throw new Error('Initalize boiler before using logger')
