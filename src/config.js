@@ -194,6 +194,7 @@ class Config {
     const store = this.store;
     const logger = this.logger;
     const baseConfigDir = this.baseConfigDir;
+    const baseFilesDir = this.baseFilesDir;
 
     async function loadUrl(scope, key, url) {
       if (typeof url === 'undefined' || url === null) {
@@ -203,7 +204,7 @@ class Config {
 
       let res = null;
       if (isFileUrl(url)) {
-        res = loadFromFile(url, this.baseFilesDir);
+        res = loadFromFile(url, baseFilesDir);
       } else {
         res = await loadFromUrl(url);
       }
