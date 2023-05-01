@@ -25,12 +25,12 @@
   },
   "dependencies": {
     "debug": "^4.3.4",
-    "js-yaml": "^4.0.0",
+    "js-yaml": "^4.1.0",
     "nconf": "^0.12.0",
     "semistandard": "^16.0.1",
-    "source-licenser": "^2.0.4",
-    "superagent": "^7.1.5",
-    "winston": "^3.7.2",
-    "winston-daily-rotate-file": "^4.6.1"
+    "source-licenser": "^2.0.5",
+    "superagent": "^8.0.9",
+    "winston": "^3.8.2",
+    "winston-daily-rotate-file": "^4.7.1"
   }
 }
