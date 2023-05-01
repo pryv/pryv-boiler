@@ -9,16 +9,6 @@ const { getConfigUnsafe, getLogger, getConfig } = require('../src').init({
   baseFilesDir: path.resolve(__dirname, '../'),
   baseConfigDir: path.resolve(__dirname, './configs'),
   extraConfigs: [{
-    scope: 'airbrake',
-    key: 'logs',
-    data: {
-      airbrake: {
-        active: false,
-        projectId: 319858,
-        key: '44ca9a107f4546505c7e24c8c598b0c7'
-      }
-    }
-  }, {
     scope: 'extra1',
     file: path.resolve(__dirname, './configs/extra-config.yml')
   }, {
@@ -89,7 +79,6 @@ indexLogger.info('hide stuff auth=c08r0xs95xlb1xgssmp6tr7c0000gp', { password: '
 
 (async () => {
   await getConfig();
-  await boiler.notifyAirbrake('Hello');
   indexLogger.info('pryv.li serial: ', config.get('serial'));
   indexLogger.info('pryv.me name: ', config.get('service:name'));
   indexLogger.info('Favicon: ', config.get('definitions:favicon:default:url'));

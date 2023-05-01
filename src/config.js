@@ -46,9 +46,6 @@ const defaults = {
       rotation: {
         isActive: false
       }
-    },
-    airbrake: {
-      active: false
     }
   }
 };
