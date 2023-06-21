@@ -5,3 +5,10 @@ foo:
 service:
   name: 'To be overriden by Async Service load'
 default-yaml: 'default-yaml loaded'
+
+logs: 
+  custom:
+    active: true
+    path: '../examples/customLogger'
+    settings:
+      dummy: 'bob'

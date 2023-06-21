@@ -144,6 +144,12 @@ Set the `DEBUG` environment variable. For example: `DEBUG="*" node app.js` will 
 
 As "debug" is a widely used package, you might get way more debug lines than expected, so you can use the `appName` property to only output messages from your application code: `DEBUG="<appName>*" node app.js`
 
+#### Using a custom logger
+
+A custom logger can be used by providing `logs:custom` information to the configuration. A working sample of custom Logger is provided in `./examples/customLogger`. 
+
+The module must implement `async init(settings)` and `log(level, key, message, meta)`
+
 #### Log configuration sample
 
 ```javascript
@@ -160,13 +166,18 @@ logs: {
     file: {
       active: true,
       path: 'application.log'
+    },
+    custom: { 
+      active: true,
+      path 'path/to/node/package',
+      settings: { /* settings passed to the custom logger */}
     }
   }
 ```
 
 ## TODO
 
-- Make config an eventEmiiter ? // to track when read or if config chenages
+- Make config an eventEmitter ? // to track when read or if config changes
 - FIX realtive PATH logic for config.loadFromFile() 
 
 

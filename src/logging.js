@@ -8,6 +8,7 @@ require('winston-daily-rotate-file');
 const debugModule = require('debug');
 let winstonInstance = null;
 let rootLogger = null;
+let customLoggerInstance = null;
 
 // ------ winston formating
 
@@ -73,11 +74,15 @@ function generateFormat(options) {
 /**
  * Helper to pass log instructions to winston
  */
-function globalLog(level, text, context) { 
+function globalLog(level, key, message, context) { 
+  const text = `[${key}] ${message}`;
   if (winstonInstance) {
     winstonInstance[level](text, context);
   } else {
     console.log('Logger not initialized: ', ...arguments);
+  }
+  if (customLoggerInstance) {
+    customLoggerInstance.log(level, key, message, context);
   }
 }
 
@@ -132,6 +137,13 @@ async function initLoggerWithConfig(config) { 
     }
     
   }
+
+  // custom
+  if (config.get('logs:custom:active')) {
+    customLoggerInstance = require(config.get('logs:custom:path'));
+    await customLoggerInstance.init(config.get('logs:custom:settings'));
+  }
+
   rootLogger.debug('Logger Initialized');
 };
 
@@ -183,7 +195,7 @@ class Logger {
 
   log() {
     const level = arguments[0];
-    const text = '[' + this._name() + ']: ' + hideSensitiveValues(arguments[1]);
+    const message = hideSensitiveValues(arguments[1]);
     const context = [];
 
     let meta;
@@ -196,7 +208,7 @@ class Logger {
     } else if (context.length > 1) {
       meta = {context:  context};
     }
-    globalLog(level, text, meta);
+    globalLog(level, this._name(), message, meta);
   }
 
   info () { this.log('info', ...arguments); }
