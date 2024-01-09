@@ -50,8 +50,6 @@ const defaults = {
   }
 };
 
-
-
 /**
  * Config manager
  */
@@ -62,7 +60,7 @@ class Config {
   baseConfigDir;
   learnDirectoryAndFilename;
 
-  constructor() {
+  constructor () {
     this.extraAsync = [];
   }
 
@@ -78,7 +76,7 @@ class Config {
    * @param {Object} logging
    * @returns {Config} this
    */
-  initSync(options, logging) {
+  initSync (options, logging) {
     this.appName = options.appName;
     this.learnDirectoryAndFilename = getLearnFilename(options.appName, options.learnDirectory);
     this.baseFilesDir = options.baseFilesDir || process.cwd();
@@ -103,12 +101,12 @@ class Config {
     // memory must come first for config.set() to work without loading config files
     // 3. `process.env`
     // 4. `process.argv`
-    store.argv({parseValues: true}).env({parseValues: true, separator: '__'});
+    store.argv({ parseValues: true }).env({ parseValues: true, separator: '__' });
 
     // 5. Values in `${NODE_ENV}-config.yml` or from --config parameter
     let configFile;
     if (store.get('config')) {
-      configFile = store.get('config')
+      configFile = store.get('config');
     } else if (store.get('NODE_ENV')) {
       configFile = path.resolve(baseConfigDir, store.get('NODE_ENV') + '-config.yml');
     }
@@ -122,7 +120,7 @@ class Config {
 
     // load extra config files & plugins
     if (options.extras) {
-      for (let extra of options.extras) {
+      for (const extra of options.extras) {
         if (extra.file) {
           loadFile(extra.scope, extra.file);
           continue;
@@ -133,7 +131,7 @@ class Config {
           continue;
         }
         if (extra.data) {
-          const conf = extra.key ? {[extra.key]: extra.data} : extra.data;
+          const conf = extra.key ? { [extra.key]: extra.data } : extra.data;
           store.use(extra.scope, { type: 'literal', store: conf });
           logger.debug('Loaded [' + extra.scope + '] from DATA: ' + (extra.key ? ' under [' + extra.key + ']' : ''));
           continue;
@@ -141,7 +139,7 @@ class Config {
         if (extra.url || extra.urlFromKey || extra.fileAsync) {
           // register scope in the chain to keep order of configs
           store.use(extra.scope, { type: 'literal', store: {} });
-          logger.debug('Booked [' + extra.scope +'] for async Loading ');
+          logger.debug('Booked [' + extra.scope + '] for async Loading ');
           this.extraAsync.push(extra);
           continue;
         }
@@ -153,7 +151,6 @@ class Config {
         logger.warn('Unkown extra in config init', extra);
       }
     }
-
 
     // .end-1 load default and custom config from configs/default-config.json
     loadFile('default-file', path.resolve(baseConfigDir, 'default-config.yml'));
@@ -167,36 +164,34 @@ class Config {
 
     // --- helpers --/
 
-    function loadFile(scope, filePath) {
-
+    function loadFile (scope, filePath) {
       if (fs.existsSync(filePath)) {
-
-        if (filePath.endsWith('.js')) {  // JS file
+        if (filePath.endsWith('.js')) { // JS file
           const conf = require(filePath);
           store.use(scope, { type: 'literal', store: conf });
-        } else {   // JSON or YAML
-          const options = { file: filePath }
-          if (filePath.endsWith('.yml') || filePath.endsWith('.yaml')) { options.format = nconf.formats.yaml }
+        } else { // JSON or YAML
+          const options = { file: filePath };
+          if (filePath.endsWith('.yml') || filePath.endsWith('.yaml')) { options.format = nconf.formats.yaml; }
           store.file(scope, options);
         }
 
-        logger.debug('Loaded [' + scope + '] from file: ' + filePath)
+        logger.debug('Loaded [' + scope + '] from file: ' + filePath);
       } else {
         logger.debug('Cannot find file: ' + filePath + ' for scope [' + scope + ']');
       }
     }
   }
 
-  async initASync() {
+  async initASync () {
     const store = this.store;
     const logger = this.logger;
     const baseConfigDir = this.baseConfigDir;
     const baseFilesDir = this.baseFilesDir;
 
-    async function loadUrl(scope, key, url) {
+    async function loadUrl (scope, key, url) {
       if (typeof url === 'undefined' || url === null) {
-          logger.warn('Null or Undefined Url for [' + scope +']');
-          return;
+        logger.warn('Null or Undefined Url for [' + scope + ']');
+        return;
       }
 
       let res = null;
@@ -205,13 +200,13 @@ class Config {
       } else {
         res = await loadFromUrl(url);
       }
-      const conf = key ? {[key]: res} : res;
+      const conf = key ? { [key]: res } : res;
       store.add(scope, { type: 'literal', store: conf });
       logger.debug('Loaded [' + scope + '] from URL: ' + url + (key ? ' under [' + key + ']' : ''));
     }
 
     // load remote config files
-    for (let extra of this.extraAsync) {
+    for (const extra of this.extraAsync) {
       if (extra.url) {
         await loadUrl(extra.scope, extra.key, extra.url);
         continue;
@@ -231,11 +226,11 @@ class Config {
       if (extra.fileAsync) {
         const filePath = path.resolve(baseConfigDir, extra.fileAsync);
 
-        if (! fs.existsSync(filePath)) {
+        if (!fs.existsSync(filePath)) {
           logger.warn('Cannot find file: ' + filePath + ' for scope [' + extra.scope + ']');
           continue;
         }
-        if (! filePath.endsWith('.js')) {
+        if (!filePath.endsWith('.js')) {
           logger.warn('Cannot only load .js file: ' + filePath + ' for scope [' + extra.scope + ']');
           continue;
         }
@@ -257,8 +252,8 @@ class Config {
    * @param {string} key
    * @returns {boolean}
    */
-  has(key) {
-    if (! this.store) { throw(new Error('Config not yet initialized'))}
+  has (key) {
+    if (!this.store) { throw (new Error('Config not yet initialized')); }
     const value = this.store.get(key);
     return (typeof value !== 'undefined');
   }
@@ -267,10 +262,10 @@ class Config {
    * Retreive value
    * @param {string} [key] if no key is provided all the config is returned
    */
-  get(key) {
-    if (! this.store) { throw(new Error('Config not yet initialized'))}
+  get (key) {
+    if (!this.store) { throw (new Error('Config not yet initialized')); }
     const value = this.store.get(key);
-    if (typeof value === 'undefined') this.logger.debug('get: [' + key +'] is undefined');
+    if (typeof value === 'undefined') this.logger.debug('get: [' + key + '] is undefined');
     learn(this.learnDirectoryAndFilename, key);
     return value;
   }
@@ -279,20 +274,20 @@ class Config {
    * Retreive value and store info that applies
    * @param {string} key
    */
-  getScopeAndValue(key) {
-    if (! this.store) { throw(new Error('Config not yet initialized'))};
-    for (let scopeName of Object.keys(this.store.stores)) {
+  getScopeAndValue (key) {
+    if (!this.store) { throw (new Error('Config not yet initialized')); }
+    for (const scopeName of Object.keys(this.store.stores)) {
       const store = this.store.stores[scopeName];
       const value = store.get(key);
       if (typeof value !== 'undefined') {
         const res = {
-          value: value,
+          value,
           scope: scopeName
-        }
+        };
         if (store.type === 'file') {
-          res.info = 'From file: ' + store.file
+          res.info = 'From file: ' + store.file;
         } else {
-          info = 'Type: ' + store.type
+          info = 'Type: ' + store.type;
         }
         return res;
       }
@@ -305,8 +300,8 @@ class Config {
    * @param {string} key
    * @param {Object} value
    */
-  set(key, value) {
-    if (! this.store) { throw(new Error('Config not yet initialized'))}
+  set (key, value) {
+    if (!this.store) { throw (new Error('Config not yet initialized')); }
     this.store.set(key, value);
   }
 
@@ -314,7 +309,7 @@ class Config {
    * Inject Test Config and override any other option
    * @param {Object} configObject;
    */
-  injectTestConfig(configObject) {
+  injectTestConfig (configObject) {
     this.replaceScopeConfig('test', configObject);
   }
 
@@ -323,12 +318,11 @@ class Config {
    * @param {string} scope;
    * @param {Object} configObject;
    */
-  replaceScopeConfig(scope, configObject) {
-    if (! this.store) { throw(new Error('Config not yet initialized'))}
-    this.logger.debug('Replace ['+ scope + '] with: ', configObject);
-    this.store.add(scope, {type: 'literal', store: configObject});
+  replaceScopeConfig (scope, configObject) {
+    if (!this.store) { throw (new Error('Config not yet initialized')); }
+    this.logger.debug('Replace [' + scope + '] with: ', configObject);
+    this.store.add(scope, { type: 'literal', store: configObject });
   }
-
 }
 
 module.exports = Config;
@@ -338,12 +332,12 @@ module.exports = Config;
 const FILE_PROTOCOL = 'file://';
 const FILE_PROTOCOL_LENGTH = FILE_PROTOCOL.length;
 
-async function loadFromUrl(url) {
+async function loadFromUrl (url) {
   const res = await superagent.get(url);
   return res.body;
 }
 
-function loadFromFile(fileUrl, baseFilesDir) {
+function loadFromFile (fileUrl, baseFilesDir) {
   const filePath = stripFileProtocol(fileUrl);
 
   if (isRelativePath(filePath)) {
@@ -358,49 +352,46 @@ function loadFromFile(fileUrl, baseFilesDir) {
   return res;
 }
 
-
-function isFileUrl(filePath) {
+function isFileUrl (filePath) {
   return filePath.startsWith(FILE_PROTOCOL);
 }
 
-function isRelativePath(filePath) {
+function isRelativePath (filePath) {
   return !path.isAbsolute(filePath);
 }
 
-function stripFileProtocol(filePath) {
+function stripFileProtocol (filePath) {
   return filePath.substring(FILE_PROTOCOL_LENGTH);
 }
 
-
 // -------- learning mode ------- //
 
-function getLearnFilename(appName, learnDirectory) {
-  if (! learnDirectory) return;
+function getLearnFilename (appName, learnDirectory) {
+  if (!learnDirectory) return;
   let i = 0;
   let res;
   do {
-    res = path.join(learnDirectory, appName + i );
+    res = path.join(learnDirectory, appName + i);
     i++;
-  } while(fs.existsSync(res + '-config.json'));
+  } while (fs.existsSync(res + '-config.json'));
   return res;
 }
 
-function learn(learnDirectoryAndFilename, key) {
+function learn (learnDirectoryAndFilename, key) {
   if (learnDirectoryAndFilename) {
     const caller_line = (new Error()).stack.split('\n')[3]; // get callee name and line
-    const index = caller_line.indexOf("at ");
-    const str = key + ';' + caller_line.slice(index+3, caller_line.length) + '\n';
+    const index = caller_line.indexOf('at ');
+    const str = key + ';' + caller_line.slice(index + 3, caller_line.length) + '\n';
     fs.appendFileSync(learnDirectoryAndFilename + '-calls.csv', str);
   }
 }
 
-function saveConfig(learnDirectoryAndFilename, store) {
+function saveConfig (learnDirectoryAndFilename, store) {
   if (learnDirectoryAndFilename) {
     const filename = learnDirectoryAndFilename + '-config.json';
-    fs.writeFileSync(filename, JSON.stringify({stores: store.stores, config: store.get()}, null, 2));
+    fs.writeFileSync(filename, JSON.stringify({ stores: store.stores, config: store.get() }, null, 2));
   }
 }
-
 
 /**
  * @typedef ConfigFile
@@ -408,18 +399,17 @@ function saveConfig(learnDirectoryAndFilename, store) {
  * @property {string} file - the config file (.yml, .json, .js)
  */
 
- /**
+/**
  * @typedef ConfigPlugin
  * @property {Object} plugin
  * @property {Function} plugin.load - a function that takes the "nconf store" as argument and returns the "name" of the plugin
  */
 
- /**
+/**
  * @typedef ConfigData
  * @property {string} scope - scope for nconf hierachical load
  * @property {string} [key] - (optional) key to load result of url. If null loaded at root of the config
  * @property {object} data - the data to load
-
 
 /**
  * @typedef ConfigRemoteURL

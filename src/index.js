@@ -25,14 +25,14 @@ const boiler = {
    * Prefered way to get the configuration
    * @returns {Promise<Config>}
    */
-  getConfig: getConfig,
+  getConfig,
   /**
    * get the configuration.
    * If the configuration is not fully initialized throw an error
    * @param {boolean} warnOnly - Only warns about potential misuse of config
    * @returns {Config}
    */
-  getConfigUnsafe: getConfigUnsafe,
+  getConfigUnsafe,
 
   /**
    * Init Boiler, should be called just once when starting an APP
@@ -42,7 +42,7 @@ const boiler = {
    * @param {Array<ConfigFile|ConfigRemoteURL|ConfigRemoteURLFromKey|ConfigPlugin>} [options.extraConfigs] - (optional) and array of extra files to load
    * @param {Function} [fullyLoadedCallback] - (optional) called when the config is fully loaded
    */
-  init: init
+  init
 };
 
 let logger;

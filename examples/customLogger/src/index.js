@@ -1,20 +1,24 @@
+/**
+ * @license
+ * [BSD-3-Clause](https://github.com/pryv/pryv-boiler/blob/master/LICENSE)
+ */
 
-module.exports = { 
-  init, 
+module.exports = {
+  init,
   log
-}
+};
 
-async function init(settings) {
+async function init (settings) {
   console.log('CUSTOM LOGGER initilaized with', settings);
 }
 
 /**
- * 
+ *
  * @param {string} level one of 'debug', 'info', 'warn', 'error'
  * @param {string} key ':' namespaced keys
- * @param {message} message 
- * @param {object} meta 
+ * @param {message} message
+ * @param {object} meta
  */
-function log(level, key, text, meta) {
-  console.log('Custom: ' + JSON.stringify({level, key, text, meta}));
+function log (level, key, text, meta) {
+  console.log('Custom: ' + JSON.stringify({ level, key, text, meta }));
 }
