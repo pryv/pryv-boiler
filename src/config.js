@@ -287,7 +287,7 @@ class Config {
         if (store.type === 'file') {
           res.info = 'From file: ' + store.file;
         } else {
-          info = 'Type: ' + store.type;
+          res.info = 'Type: ' + store.type;
         }
         return res;
       }
